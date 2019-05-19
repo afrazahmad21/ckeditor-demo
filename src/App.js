@@ -60,9 +60,6 @@ class App extends Component {
                     onChange={this.onChange}
                 />
 
-                <div style={{marginTop: "20px", fontWeight: "bold"}}>
-                    <label>Code</label>
-                </div>
                 <div>
                     <button type={"button"} onClick={this.onSubmit}>Save HTML</button>
                 </div>
