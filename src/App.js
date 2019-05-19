@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import axios from 'axios';
 import {SaveCKHtml} from './apiUrls';
+import MyUploadAdapter from './MyUploadAdapter'
 
 class App extends Component {
     state = {
@@ -40,12 +41,22 @@ class App extends Component {
             <div className="App">
                 <h2> CKEditor 5 </h2>
                 <CKEditor
-                    editor={ClassicEditor}
+                    editor={DecoupledEditor}
                     data="<p>Edit here</p>"
-                    onInit={editor => {
-                        // You can store the "editor" and use when it is needed.
-                        console.log('Editor is ready to use!', editor);
-                    }}
+                    onInit={ editor => {
+                        console.log( 'Editor is ready to use!', editor );
+
+                        // Insert the toolbar before the editable area.
+                        editor.ui.getEditableElement().parentElement.insertBefore(
+                            editor.ui.view.toolbar.element,
+                            editor.ui.getEditableElement()
+                        );
+
+                        editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
+                            // Configure the URL to the upload script in your back-end here!
+                            return new MyUploadAdapter( loader );
+                        };
+                    } }
                     onChange={this.onChange}
                 />
 
