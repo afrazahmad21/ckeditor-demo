@@ -63,9 +63,6 @@ class App extends Component {
                 <div style={{marginTop: "20px", fontWeight: "bold"}}>
                     <label>Code</label>
                 </div>
-                <div style={{marginTop: "10px"}}>
-                    <textarea rows={7} cols={100} value={dataCK}/>
-                </div>
                 <div>
                     <button type={"button"} onClick={this.onSubmit}>Save HTML</button>
                 </div>
