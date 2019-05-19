@@ -17,7 +17,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen(3000, () => {
+app.listen(80, () => {
   console.log('listening on 80');
 });
 
