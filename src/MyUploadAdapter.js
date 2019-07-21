@@ -65,7 +65,7 @@ export default class MyUploadAdapter {
         // a POST request with JSON as a data structure but your configuration
         // could be different.
         xhr.open( 'POST', upload, true );
-        xhr.setRequestHeader("Authorization", "Basic " + btoa("ckeditor:pakistan123"));
+        xhr.setRequestHeader("Authorization", "MyCalender " + btoa("ckeditor:pakistan123"));
         xhr.responseType = 'json';
     }
 

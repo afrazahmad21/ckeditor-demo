@@ -1,72 +1,44 @@
-import React, {Component} from 'react';
-import CKEditor from '@ckeditor/ckeditor5-react';
-import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
-import axios from 'axios';
-import {SaveCKHtml} from './apiUrls';
-import MyUploadAdapter from './MyUploadAdapter'
+import React from 'react'
+import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import Login from './Components/Login'
+import Verify from './Components/Verify'
+import CoursesList from './Components/CoursesList'
+import Editor from './Components/Editor'
+import MyCalendar from './Components/Calender'
+import configureStore from "./Store";
+import $ from 'jquery';
+import { Provider } from "react-redux";
+import ProtectedRoute from './HOC/protectedRoutes';
 
-class App extends Component {
-    state = {
-        dataCK: "<p>Edit Here</p>"
-    }
-    onChange = (event, editor) => {
-        const data = editor.getData();
-        console.log({event, editor, data});
-        this.setState({dataCK: data})
-    }
+window.jQuery = $;
+window.$ = $;
+global.jQuery = $;
 
-    onSubmit = (e) => {
-        const {dataCK} = this.state;
-        axios.post(SaveCKHtml, {data: dataCK}, {
-            auth: {
-                username: 'ckeditor',
-                password: 'pakistan123'
-            }
-        })
-            .then(response => {
-                const {message} = response.data
-                alert(message)
-            }).catch(err => {
-                debugger
-            const {message} = err.data
-            alert(message)
-        })
-    }
+require('bootstrap/dist/css/bootstrap.min.css');
+require('./css/style.css');
+require('font-awesome/css/font-awesome.min.css');
+require('popper.js/dist/popper.min')
+require('bootstrap/dist/js/bootstrap.min');
+require('easing-js/easing')
+require('react-big-calendar/lib/css/react-big-calendar.css');
+require('react-big-calendar/lib/addons/dragAndDrop');
 
-    render() {
-        let {dataCK} = this.state;
-        dataCK = dataCK.split('\\n').join('\n');
+const reduxStore = configureStore(window.REDUX_INITIAL_DATA);
 
-        return (
-            <div className="App">
-                <h2> CKEditor 5 </h2>
-                <CKEditor
-                    editor={DecoupledEditor}
-                    data="<p>Edit here</p>"
-                    onInit={ editor => {
-                        console.log( 'Editor is ready to use!', editor );
 
-                        // Insert the toolbar before the editable area.
-                        editor.ui.getEditableElement().parentElement.insertBefore(
-                            editor.ui.view.toolbar.element,
-                            editor.ui.getEditableElement()
-                        );
+const App = () =>(
+    <Provider store={reduxStore}>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/" component={Login} />
+                <Route exact path="/verify" component={Verify} />
+                <ProtectedRoute exact path="/courses" component={CoursesList} />
+                <ProtectedRoute exact path="/editor" component={Editor} />
+                <ProtectedRoute exact path="/calender" component={MyCalendar} />
+            </Switch>
 
-                        editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
-                            // Configure the URL to the upload script in your back-end here!
-                            return new MyUploadAdapter( loader );
-                        };
-                    } }
-                    onChange={this.onChange}
-                />
+        </BrowserRouter>
+    </Provider>
+)
 
-                <div>
-                    <button type={"button"} onClick={this.onSubmit}>Save HTML</button>
-                </div>
-            </div>
-        );
-    }
-}
-
-export default App;
-
+export default App
