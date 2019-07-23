@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from "react";
-import {connect} from 'react-redux'
-import {courseTeacher} from '../Utils/utils'
+import {connect} from 'react-redux';
+import {courseTeacher} from '../Utils/utils';
+import {selectCourse, addCourses} from '../Store/action';
 import axios from 'axios';
 
 
@@ -8,30 +9,32 @@ class CoursesList extends Component{
 
   state = {
     courses: []
-  }
+  };
 
-    addDescription = (e) =>{
-      e.preventDefault()
-        this.props.history.push('/editor')
-    }
+    addDescription = (e, index) =>{
+        e.preventDefault();
+        this.props.selectCourse(index);
+        this.props.history.push('/editor');
+    };
 
   componentDidMount(){
     const {teacherId} = this.props;
+    // TODO: REMOVE TEACHER ID HARDCODED
     const api = courseTeacher.replace('{teacherId}', 3);
-    debugger
     axios.get(api)
         .then(response =>{
-          debugger
-            this.setState({courses: response.data})
+            const courses = response.data;
+            this.props.addCourses(courses);
+            this.setState({courses});
         }).catch(err =>{
 
-    })
+    });
 
   }
 
   render() {
     const {courses} = this.state;
-    debugger
+    debugger;
       return (
           <Fragment>
               <section className="banner1">
@@ -70,7 +73,7 @@ class CoursesList extends Component{
                   </div>
                   <div className="row">
                       <div className="col-md-6">
-                          <button className="btn btn-lg btn-primary" onClick={this.addDescription}>
+                          <button className="btn btn-lg btn-primary" onClick={e =>this.addDescription(e, index)}>
                               <i className="fa fa-plus"/> Add Description
                           </button>
                         </div>
@@ -84,7 +87,7 @@ class CoursesList extends Component{
 
                   </div>
               </section>
-                     )
+                     );
               })}
           </Fragment>
       );
@@ -94,7 +97,12 @@ class CoursesList extends Component{
 function mapStateToProps({teacher}) {
     return {
       teacherId: teacher.teacherId
-    }
+    };
 }
 
-export default connect(mapStateToProps, null)(CoursesList);
+const mapReducerToProps = {
+    selectCourse,
+    addCourses
+};
+
+export default connect(mapStateToProps, mapReducerToProps)(CoursesList);

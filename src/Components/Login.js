@@ -1,9 +1,9 @@
-import React, {PureComponent} from 'react'
+import React, {PureComponent} from 'react';
 import axios from 'axios';
 
-import {onBoard} from '../Utils/utils'
-import {teacherLogin} from '../Store/action'
-import {connect} from 'react-redux'
+import {onBoard} from '../Utils/utils';
+import {teacherLogin} from '../Store/action';
+import {connect} from 'react-redux';
 
 class Login extends PureComponent{
     state ={
@@ -11,18 +11,17 @@ class Login extends PureComponent{
         email: ""
     }
     doLogin  =( event) =>{
-        event.preventDefault()
-        debugger
+        event.preventDefault();
+        debugger;
         try{
             axios.post(onBoard, {...this.state}).then(response =>{
-                console.log(response.data.password)
-                debugger
-                this.props.teacherLogin(response.data)
-                this.props.history.push('/verify')
-            })
+                alert(response.data.password);
+                this.props.teacherLogin(response.data);
+                this.props.history.push('/verify');
+            });
 
         }catch (err) {
-            console.log(err)
+            console.log(err);
         }
 
     }
@@ -74,7 +73,7 @@ class Login extends PureComponent{
             </section>
 
 
-        )
+        );
     }
 
 }
@@ -82,7 +81,7 @@ class Login extends PureComponent{
 
 const mapDispatchToProps = {
         teacherLogin
-}
+};
 
 
 export default connect(null, mapDispatchToProps)(Login);

@@ -1,4 +1,5 @@
-// const baseUrl = 'http://localhost:3010';
-const baseUrl = "http://157.230.186.96:3010";
-export const SaveCKHtml = `${baseUrl}/save`;
-export const upload = `${baseUrl}/upload`
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
+// const baseUrl = "http://157.230.186.96:3010";
+export const saveCKHtml = `${baseUrl}/save`;
+export const upload = `${baseUrl}/upload`;
+export const getCKHtml = `${baseUrl}/view`;

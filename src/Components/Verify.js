@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {connect} from 'react-redux';
-import {teacherAuthenticated} from '../Store/action'
+import {teacherAuthenticated} from '../Store/action';
 
 class Verify extends Component {
   constructor(props) {
@@ -15,16 +15,16 @@ class Verify extends Component {
   };
 
     verifyUser = (e) =>{
-      debugger
-      e.preventDefault()
+      debugger;
+      e.preventDefault();
       const {password} = this.state;
       const {password:apiPassword} = this.props;
       if(password === apiPassword){
           this.props.teacherAuthenticated(true);
-          this.props.history.push('/courses')
+          this.props.history.push('/courses');
       }else{
-        alert("Your enters passowrd is inValid! please try again")
-        this.setState({password: ""})
+        alert("Your enters passowrd is inValid! please try again");
+        this.setState({password: ""});
       }
 
     }
@@ -75,13 +75,13 @@ class Verify extends Component {
   }
 }
 
-function mapStateToProps({teacher}) {
+function mapStateToProps({teacher}){
   return{
       password: teacher.password
-  }
+  };
 }
 
 const mapDispatchToProps = {
     teacherAuthenticated
-}
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Verify);
