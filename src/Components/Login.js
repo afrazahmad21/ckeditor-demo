@@ -12,7 +12,7 @@ class Login extends PureComponent{
     }
     doLogin  =( event) =>{
         event.preventDefault();
-        debugger;
+
         try{
             axios.post(onBoard, {...this.state}).then(response =>{
                 alert(response.data.password);

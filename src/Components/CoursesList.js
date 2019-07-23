@@ -34,7 +34,7 @@ class CoursesList extends Component{
 
   render() {
     const {courses} = this.state;
-    debugger;
+
       return (
           <Fragment>
               <section className="banner1">

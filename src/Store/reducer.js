@@ -25,15 +25,15 @@ const teacherReducer = (state = defaultTeacherState, action) =>{
 };
 
 const defaultCourseState= {
-    courses: [],
+    list: [],
     selectedCourseId: []
 };
 const courseReducer = (state= defaultCourseState, action) =>{
-    debugger;
+
     switch (action.type){
         case add_courses:
-            state.courses.length = 0;
-            return {...state, courses: action.payload};
+            state.list.length = 0;
+            return {...state, list: action.payload};
         case select_course:
             return {...state, selectedCourseId: action.payload};
         default:

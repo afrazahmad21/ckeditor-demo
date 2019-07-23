@@ -8,19 +8,19 @@ import MyUploadAdaptor from "../MyUploadAdapter";
 
 class Editor extends Component {
   state = {
-    dataCK: "<p> Add course description here....</p>",
+    dataCK: "<p></p>",
     firstClick : false,
     type: "DESCRIPTION"
   };
 
   componentDidMount() {
       const {type} = this.state;
-      const {teacher} = this.psops;
+      const {teacher, selectedCourseId} = this.props;
       const {teacherId} = teacher;
       const {REACT_APP_API_USER_NAME, REACT_APP_API_PASSWORD} = process.env;
       axios.put(
           getCKHtml,
-          { type, teacherId },
+          { type, teacherId,courseId: selectedCourseId },
           {
               auth: {
                   username: REACT_APP_API_USER_NAME,
@@ -28,7 +28,11 @@ class Editor extends Component {
               }
           }
       ).then(response  =>{
-            this.setState({dataCK: response.data});
+            const {editor} = response.data;
+            const {data} = editor;
+
+            if(data)
+                this.setState({dataCK: data});
       }).catch(err =>{
 
       });
@@ -42,12 +46,12 @@ class Editor extends Component {
 
   onSubmit = e => {
     const { dataCK, type } = this.state;
-    const {teacher} = this.props;
+    const {teacher, selectedCourseId} = this.props;
     const {teacherId} = teacher;
     const {REACT_APP_API_USER_NAME, REACT_APP_API_PASSWORD} = process.env;
     axios.post(
         saveCKHtml,
-        { data: dataCK, type, teacherId },
+        { data: dataCK, type, teacherId, courseId: selectedCourseId },
         {
           auth: {
             username: REACT_APP_API_USER_NAME,
@@ -58,6 +62,7 @@ class Editor extends Component {
       .then(response => {
         const { message } = response.data;
         alert(message);
+        this.props.history.push('/courses');
       })
       .catch(err => {
         const { message } = err.data;
@@ -66,7 +71,8 @@ class Editor extends Component {
   };
 
   onClick = (event) =>{
-      const {firstClick,} = this.state;
+      const {firstClick} = this.state;
+
       if(!firstClick){
           this.setState({firstClick: true,dataCK: "" });
       }
@@ -74,11 +80,25 @@ class Editor extends Component {
 
   render() {
     let { dataCK } = this.state;
-    dataCK = dataCK.split("\\n").join("\n");
+    dataCK = dataCK ? dataCK.split("\\n").join("\n"): "";
     const { selectedCourse } = this.props;
     return (
       <div className="App">
-        <h2> {selectedCourse.courseName} </h2>
+          <section className="banner1">
+              <header>
+                  <nav className="navbar navbar-expand-lg navbar-light">
+                      <div className="container">
+                          <a className="navbar-main" href="index.html">
+                              <img src="/images/logo.png"/>
+                              <small>
+                                  <sub>Edit Description</sub>
+                              </small>
+                          </a>
+                      </div>
+                  </nav>
+              </header>
+          </section>
+          <h2 style={{padding: '10px', textAlign: 'center', textTransform: "upperCase"}}> {selectedCourse.courseName} </h2>
         <CKEditor
           editor={DecoupledEditor}
           data= {dataCK}
@@ -99,13 +119,22 @@ class Editor extends Component {
             };
           }}
           onChange={this.onChange}
-          onClick = {this.onClick}
+          onClick={this.onClick}
         />
 
         <div>
           <button
             type={"button"}
-            className="btn-submit-editor"
+            style={{padding: "10px 10px 0 0",
+                backgroundColor: "#2A46DB",
+                width: "100%",
+                boxShadow: "0px 0px 2px #fff",
+                textShadow: "-1px -1px 0 rgba(0,0,0,0.3)",
+                fontWeight: "500",
+                fontSize: "22px",
+                color: "white",
+                border: "1px solid #1A428D"
+            }}
             onClick={this.onSubmit}
           >
             Save
@@ -116,9 +145,10 @@ class Editor extends Component {
   }
 }
 
-function mapStateToProps({ courses, teacher, selectedCourseId }) {
-  const selectedCourse = selectedCourseId ? courses[selectedCourseId] : [];
-  debugger;
+function mapStateToProps({ courses, teacher }) {
+  const {list, selectedCourseId} = courses;
+  const selectedCourse = selectedCourseId ? list[selectedCourseId] : [];
+
   return {
     selectedCourseId,
     selectedCourse,

@@ -15,7 +15,7 @@ class Verify extends Component {
   };
 
     verifyUser = (e) =>{
-      debugger;
+
       e.preventDefault();
       const {password} = this.state;
       const {password:apiPassword} = this.props;
