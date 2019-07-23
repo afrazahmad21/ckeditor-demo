@@ -15,7 +15,9 @@ class Login extends PureComponent{
 
         try{
             axios.post(onBoard, {...this.state}).then(response =>{
-                alert(response.data.password);
+                const {REACT_APP_ENV} = process.env;
+                if(REACT_APP_ENV === 'dev')
+                    alert(response.data.password);
                 this.props.teacherLogin(response.data);
                 this.props.history.push('/verify');
             });
